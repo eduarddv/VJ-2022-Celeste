@@ -1,0 +1,22 @@
+TILEMAP
+16 16                   -- Size of tile map in tiles
+24 24                   -- Tile size & block size
+12 2			-- Player initial tile
+images/MapaC.png        -- Tilesheet
+8 6                     -- Number of tiles in tilesheet
+3;55655:::::8  9
+53;:::8        9
+5537          ]9
+::8         \779
+323         =>15
+4;8           ;5
+51>><          9
+58             9
+4              9
+8            =15
+       [      95
+       23     95
+   23  ;8  RRR95
+11154  23RR21155
+56554RR951155565
+5555511555555555
