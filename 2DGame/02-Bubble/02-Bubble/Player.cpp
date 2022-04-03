@@ -112,10 +112,18 @@ void Player::update(int deltaTime)
 				spawn();
 			}
 			else if (jumpAngle <= 90) {
-				bJumping = !map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y);
+				if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
+					jumpAngle = 180 - jumpAngle;
 			}
 			else if (jumpAngle > 90)
 				bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y);
+		}
+		// CLIMB
+		if (Game::instance().getSpecialKey(GLUT_KEY_UP) && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
+		{
+			bJumping = true;
+			jumpAngle = 0;
+			startY = posPlayer.y;
 		}
 	}
 	else
@@ -128,6 +136,16 @@ void Player::update(int deltaTime)
 		else if(map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			{
+				bJumping = true;
+				jumpAngle = 0;
+				startY = posPlayer.y;
+			}
+		}
+		else
+		{
+			// CLIMB
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP) && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
 			{
 				bJumping = true;
 				jumpAngle = 0;

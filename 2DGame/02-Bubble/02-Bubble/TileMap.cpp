@@ -265,6 +265,28 @@ bool TileMap::collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, cons
 	return false;
 }
 
+bool TileMap::touchingWall(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	int x0, x1, y0, y1;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y0 = pos.y / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
+	for (int y = y0; y <= y1; y++)
+	{
+		if (x0 > 0 && map[y * mapSize.x + x0 - 1] != 0 && (pos.x % tileSize < 4)) {
+			return true;
+		}
+		if ((x1 + 1 < mapSize.x) && map[y * mapSize.x + x1 + 1] != 0 && ((pos.x + size.x - 1) % tileSize) >= tileSize - 4)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool TileMap::levelWin()
 {
 	return bLevelWin;
