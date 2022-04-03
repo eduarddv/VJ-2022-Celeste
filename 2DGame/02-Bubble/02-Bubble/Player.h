@@ -26,10 +26,13 @@ private:
 	void setPosition(const glm::vec2& pos);
 
 private:
-	bool bJumping, bDashing;
+	bool bJumping, bDashing, bCanDash;
 	bool bG; // Cheats: (G)od mode
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY;
+	int dashLength;
+	glm::ivec2 dashDir;
+	glm::vec2 posPlayerStart, posPlayerEnd;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
