@@ -26,7 +26,7 @@ private:
 	void setPosition(const glm::vec2& pos);
 
 private:
-	bool bJumping;
+	bool bJumping, bDashing;
 	bool bG; // Cheats: (G)od mode
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY;

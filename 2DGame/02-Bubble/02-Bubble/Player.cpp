@@ -22,7 +22,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bG = false;
-	bJumping = false;
+	bJumping = false; bDashing = false;
 	spritesheet.loadFromFile("images/bub.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(PLAYER_QUAD_SIZE, glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(4);
@@ -119,7 +119,7 @@ void Player::update(int deltaTime)
 				bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y);
 		}
 		// CLIMB
-		if (Game::instance().getSpecialKey(GLUT_KEY_UP) && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
+		if (Game::instance().getKey('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
 		{
 			bJumping = true;
 			jumpAngle = 0;
@@ -135,7 +135,7 @@ void Player::update(int deltaTime)
 		}
 		else if(map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			if(Game::instance().getKey('c'))
 			{
 				bJumping = true;
 				jumpAngle = 0;
@@ -145,7 +145,7 @@ void Player::update(int deltaTime)
 		else
 		{
 			// CLIMB
-			if (Game::instance().getSpecialKey(GLUT_KEY_UP) && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
+			if (Game::instance().getKey('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
 			{
 				bJumping = true;
 				jumpAngle = 0;
