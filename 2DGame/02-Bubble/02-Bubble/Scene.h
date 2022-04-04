@@ -27,7 +27,7 @@ private:
 	void initShaders();
 
 private:
-	const std::string levelFilename[2] = { string("levels/1.txt"), string("levels/level01.txt") };
+	const std::string levelFilename[11] = { string("levels/1.txt"), string("levels/2.txt"), string("levels/3.txt"), string("levels/4.txt"), string("levels/5.txt"), string("levels/6.txt"), string("levels/7.txt"), string("levels/8.txt"), string("levels/9.txt"), string("levels/10.txt"), string("levels/Summit.txt") };
 	int level;
 	TileMap *map;
 	Player *player;
