@@ -26,6 +26,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bG = false;
 	bJumping = false; bDashing = false; bCanDash = true;
 	spritesheet.loadFromFile("images/ProtaC.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.setMinFilter(GL_NEAREST);
+	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(PLAYER_QUAD_SIZE, glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(6);
 	
