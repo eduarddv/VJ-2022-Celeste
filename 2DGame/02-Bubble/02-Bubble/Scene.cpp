@@ -45,9 +45,29 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 
+	bool bChangeLevel = false;
 	if (map->levelWin()) {
-		delete map;
 		level++;
+		bChangeLevel = true;
+	}
+	// Cheats - 1,...,9,0,p (Level Skip)
+	for (char c = '1'; c <= '9'; c++) {
+		if (Game::instance().getKeyBuffer(c)) {
+			level = c - '1';
+			bChangeLevel = true;
+		}
+	}
+	if (Game::instance().getKeyBuffer('0')) {
+		level = 9;
+		bChangeLevel = true;
+	}
+	if (Game::instance().getKeyBuffer('p')) {
+		level = 10;
+		bChangeLevel = true;
+	}
+
+	if (bChangeLevel) {
+		delete map;
 		map = TileMap::createTileMap(levelFilename[level], glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 		player->setTileMap(map);
 		player->spawn();
