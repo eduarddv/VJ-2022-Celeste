@@ -101,50 +101,41 @@ void Player::update(int deltaTime)
 	if (bDashing)
 	{
 		dashLength += DASH_LENGTH_STEP;
-		if (dashLength == DASH_LENGTH_MAX)
+		if (dashLength >= DASH_LENGTH_MAX)
 		{
 			bDashing = false;
 		}
 
 		glm::vec2 posPlayerDash = (posPlayerEnd * float(dashLength) + posPlayerStart * float(DASH_LENGTH_MAX - dashLength)) / float(DASH_LENGTH_MAX);
-		glm::ivec2 posPlayerCurrent = posPlayer;
 		posPlayer.x = int(posPlayerDash.x);
-		if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-		{
-			spawn();
-		}
-		else if (dashDir.x < 0) {
-			if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE)) 
+		if (dashDir.x < 0) {
+			if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x)) 
 			{
-				posPlayer.x = int(posPlayerCurrent.x);
 				bDashing = false;
 			}
 		}
 		else if (dashDir.x > 0) {
-			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE))
+			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
 			{
-				posPlayer.x = int(posPlayerCurrent.x);
 				bDashing = false;
 			}
 		}
 		posPlayer.y = int(posPlayerDash.y);
-		if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-		{
-			spawn();
-		}
-		else if (dashDir.y < 0) {
-			if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE))
+		if (dashDir.y < 0) {
+			if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 			{
-				posPlayer.y = int(posPlayerCurrent.y);
 				bDashing = false;
 			}
 		}
 		else if (dashDir.y > 0) {
-			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE))
+			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 			{
-				posPlayer.y = int(posPlayerCurrent.y);
 				bDashing = false;
 			}
+		}
+		if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
+		{
+			spawn();
 		}
 		// CLIMB
 		if (Game::instance().getKey('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
@@ -163,14 +154,13 @@ void Player::update(int deltaTime)
 			if (sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
 			posPlayer.x -= 2;
+			if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
+			{
+				sprite->changeAnimation(STAND_LEFT);
+			}
 			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
 			{
 				spawn();
-			}
-			else if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE))
-			{
-				posPlayer.x += 2;
-				sprite->changeAnimation(STAND_LEFT);
 			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
@@ -178,14 +168,13 @@ void Player::update(int deltaTime)
 			if (sprite->animation() != MOVE_RIGHT)
 				sprite->changeAnimation(MOVE_RIGHT);
 			posPlayer.x += 2;
+			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
+			{
+				sprite->changeAnimation(STAND_RIGHT);
+			}
 			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
 			{
 				spawn();
-			}
-			else if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE))
-			{
-				posPlayer.x -= 2;
-				sprite->changeAnimation(STAND_RIGHT);
 			}
 		}
 		else
@@ -207,16 +196,16 @@ void Player::update(int deltaTime)
 			else
 			{
 				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-				if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-				{
-					spawn();
-				}
-				else if (jumpAngle <= 90) {
+				if (jumpAngle <= 90) {
 					if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 						jumpAngle = 180 - jumpAngle;
 				}
 				else if (jumpAngle > 90)
 					bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y);
+				if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
+				{
+					spawn();
+				}
 			}
 			// CLIMB
 			if (Game::instance().getKey('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
@@ -229,11 +218,7 @@ void Player::update(int deltaTime)
 		else
 		{
 			posPlayer.y += FALL_STEP;
-			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-			{
-				spawn();
-			}
-			else if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
+			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 			{
 				bCanDash = true;
 				if (Game::instance().getKey('c'))
@@ -252,6 +237,10 @@ void Player::update(int deltaTime)
 					jumpAngle = 0;
 					startY = posPlayer.y;
 				}
+			}
+			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
+			{
+				spawn();
 			}
 		}
 	}

@@ -31,8 +31,8 @@ public:
 	int getTileSize() const { return tileSize; }
 	glm::ivec2 getPlayerInitTile() const { return playerInitTile; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
+	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX);
+	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX);
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int *posY);
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
 	bool collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const;
