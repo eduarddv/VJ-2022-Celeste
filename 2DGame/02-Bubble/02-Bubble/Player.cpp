@@ -66,8 +66,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	// Cheats
-	if (Game::instance().getKey('g')) {
-		bG = (!bG); // Toggle (G)od mode
+	if (Game::instance().getKeyBuffer('g')) {
+		bG = !bG; // Toggle (G)od mode
 	}
 
 

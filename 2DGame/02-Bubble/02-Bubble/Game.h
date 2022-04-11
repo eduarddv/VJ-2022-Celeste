@@ -43,15 +43,18 @@ public:
 	void mouseRelease(int button);
 	
 	bool getKey(int key) const;
+	bool getKeyBuffer(int key);
 	bool getSpecialKey(int key) const;
 
 private:
 	bool bPlay;                       // Continue to play game?
 	Menu menu;                        // Main menu to render
 	Scene scene;                      // Scene to render
-	bool keys[256], specialKeys[256]; // Store key states so that 
+	bool keys[256], keysBuffer[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	State state;
+	bool bS, bLastFrameWasUpdate; // Cheat: Half (S)peed
+	int lastFrameDeltaTime;
 
 };
 
