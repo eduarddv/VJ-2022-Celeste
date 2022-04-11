@@ -128,7 +128,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		else if (dashDir.y > 0) {
-			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
+			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG))
 			{
 				bDashing = false;
 			}
@@ -201,7 +201,7 @@ void Player::update(int deltaTime)
 						jumpAngle = 180 - jumpAngle;
 				}
 				else if (jumpAngle > 90)
-					bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y);
+					bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG);
 				if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
 				{
 					spawn();
@@ -218,7 +218,7 @@ void Player::update(int deltaTime)
 		else
 		{
 			posPlayer.y += FALL_STEP;
-			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
+			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG))
 			{
 				bCanDash = true;
 				if (Game::instance().getKey('c'))

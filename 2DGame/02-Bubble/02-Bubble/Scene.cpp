@@ -45,6 +45,10 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	player->update(deltaTime);
 
+	if (map->levelLose()) {
+		player->spawn();
+	}
+	
 	bool bChangeLevel = false;
 	if (map->levelWin()) {
 		level++;

@@ -34,11 +34,12 @@ public:
 	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX);
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX);
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int *posY);
-	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const;
+	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY, const bool &bG);
 	bool collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const;
 	bool touchingWall(const glm::ivec2& pos, const glm::ivec2& size) const;
 
 	bool levelWin();
+	bool levelLose();
 
 private:
 	bool loadLevel(const string &levelFile);
@@ -50,7 +51,7 @@ private:
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 playerInitTile, mapSize, tilesheetSize;
 	int tileSize, blockSize;
-	bool bLevelWin;
+	bool bLevelWin, bLevelLose;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;

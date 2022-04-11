@@ -18,7 +18,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	bLevelWin = false;
+	bLevelWin = false; bLevelLose = false;
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -228,7 +228,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 	return false;
 }
 
-bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY) const
+bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY, const bool &bG)
 {
 	int x0, x1, y;
 
@@ -237,6 +237,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	y = (pos.y + size.y - 1) / tileSize;
 	if ((pos.y + size.y - 1) >= mapSize.y * tileSize) {
 		*posY = mapSize.y * tileSize - size.y;
+		bLevelLose = !bG;
 		return true;
 	}
 	for (int x = x0; x <= x1; x++)
@@ -304,6 +305,13 @@ bool TileMap::touchingWall(const glm::ivec2& pos, const glm::ivec2& size) const
 bool TileMap::levelWin()
 {
 	return bLevelWin;
+}
+
+bool TileMap::levelLose()
+{
+	bool tmp = bLevelLose;
+	bLevelLose = false;
+	return tmp;
 }
 
 
