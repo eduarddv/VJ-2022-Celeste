@@ -69,12 +69,15 @@ void Player::update(int deltaTime)
 	if (Game::instance().getKeyBuffer('g')) {
 		bG = !bG; // Toggle (G)od mode
 	}
+	if (Game::instance().getKeyBuffer('d')) {
+		bD = !bD; // Toggle Infinite (D)ash
+	}
 
 
 	sprite->update(deltaTime);
 
 	// DASH
-	if (Game::instance().getKey('x') && bCanDash)
+	if (Game::instance().getKey('x') && (bCanDash || bD))
 	{
 		dashDir = glm::ivec2(int(Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) - int(Game::instance().getSpecialKey(GLUT_KEY_LEFT)),
 			int(Game::instance().getSpecialKey(GLUT_KEY_DOWN)) - int(Game::instance().getSpecialKey(GLUT_KEY_UP)));

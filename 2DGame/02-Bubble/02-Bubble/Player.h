@@ -28,6 +28,7 @@ private:
 private:
 	bool bJumping, bDashing, bCanDash;
 	bool bG; // Cheats: (G)od mode
+	bool bD; // Cheats: Infinite (D)ash
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY;
 	int dashLength;
