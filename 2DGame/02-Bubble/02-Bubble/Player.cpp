@@ -34,30 +34,28 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setNumberAnimations(6);
 	
 		sprite->setAnimationSpeed(STAND_LEFT, 8);
-		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.25));
+		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.25f));
 		
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
 		
 		sprite->setAnimationSpeed(MOVE_LEFT, 8);
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25, 0.25));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5, 0.25));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75, 0.25));
-		
-		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25, 0.f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5, 0.f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.75, 0.f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.25f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.25f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75f, 0.25f + 1.f / 4.f / 8.f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.25f));
 
-		sprite->setAnimationSpeed(JUMP_RIGHT, 8);
-		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.f, 0.5));
-		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.25, 0.5));
-		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.5, 0.5));
+		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f, 0.f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.f + 1.f / 4.f / 8.f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.f));
 
 		sprite->setAnimationSpeed(JUMP_LEFT, 8);
-		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.f, 0.75f));
-		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.25, 0.75f));
-		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.5, 0.75f));
+		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.75f, 0.25f + 1.f / 4.f / 8.f));
+
+		sprite->setAnimationSpeed(JUMP_RIGHT, 8);
+		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.75f, 0.0f + 1.f / 4.f / 8.f));
 		
 	sprite->changeAnimation(STAND_RIGHT);
 	tileMapDispl = tileMapPos;
