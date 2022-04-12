@@ -6,12 +6,12 @@
 #include "Game.h"
 
 
-#define MOVE_STEP 2
-#define JUMP_ANGLE_STEP 4
+#define MOVE_STEP 3
+#define JUMP_HEIGHT 72
+#define JUMP_ANGLE_STEP 180 / 45
+#define FALL_STEP int(3.14159f * JUMP_HEIGHT / 180.f * JUMP_ANGLE_STEP)
+#define DASH_LENGTH_MAX 80
 #define DASH_LENGTH_STEP 8
-#define DASH_LENGTH_MAX 15 * DASH_LENGTH_STEP
-#define JUMP_HEIGHT 96
-#define FALL_STEP 4
 
 #define PLAYER_QUAD_SIZE glm::ivec2(24, 24)
 
