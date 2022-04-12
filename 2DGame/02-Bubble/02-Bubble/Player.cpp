@@ -197,7 +197,7 @@ void Player::update(int deltaTime)
 		if (bJumping)
 		{
 			jumpAngle += JUMP_ANGLE_STEP;			
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 			if (jumpAngle <= 90) {
 				if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 					jumpAngle = 180 - jumpAngle;
