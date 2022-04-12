@@ -107,7 +107,7 @@ void Player::update(int deltaTime)
 			bDashing = false;
 		}
 
-		bool bCollisionHorizontal = false, bCollisionUp = false;
+		bool bCollisionHorizontal = false, bCollisionUp = false, bCollisionDown = false;
 		glm::vec2 posPlayerDash = (posPlayerEnd * float(dashLength) + posPlayerStart * float(DASH_LENGTH_MAX - dashLength)) / float(DASH_LENGTH_MAX);
 		posPlayer.x = int(posPlayerDash.x);
 		if (dashDir.x < 0) {
@@ -130,7 +130,7 @@ void Player::update(int deltaTime)
 			}
 		}
 		else if (dashDir.y > 0) {
-			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG))
+			if (bCollisionDown |= map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG))
 			{
 				bDashing = false;
 			}
@@ -143,8 +143,17 @@ void Player::update(int deltaTime)
 		}
 		else if (bCollisionHorizontal) {
 			bJumping = true;
-			jumpAngle = (dashDir.y > 0) ? 180 : 0;
-			startY = posPlayer.y;
+			float initialAngle = 180.f / 3.14159f * glm::acos(180.f / 3.14159f / float(JUMP_HEIGHT) * float(MOVE_STEP) / float(JUMP_ANGLE_STEP));
+			float initialDisplacement = JUMP_HEIGHT * sin(3.14159f * initialAngle / 180.f);
+			jumpAngle = (dashDir.y > 0) ? 180 : int(initialAngle);
+			startY = posPlayer.y + ((dashDir.y > 0) ? 0 : int(initialDisplacement));
+		}
+		else if (!bDashing && !bCollisionDown) { // we have stopped dashing but not because of collision
+			bJumping = true;
+			float initialAngle = 180.f / 3.14159f * glm::acos(180.f / 3.14159f / float(JUMP_HEIGHT) * float(MOVE_STEP) / float(JUMP_ANGLE_STEP));
+			float initialDisplacement = JUMP_HEIGHT * sin(3.14159f * initialAngle / 180.f);
+			jumpAngle = (!dashDir.y) ? 90 : (dashDir.y > 0) ? 180 : int(initialAngle);
+			startY = posPlayer.y + ((!dashDir.y) ? JUMP_HEIGHT : (dashDir.y > 0) ? 0 : int(initialDisplacement));
 		}
 		// CLIMB
 		bool bTouchingRightFirst = false;
