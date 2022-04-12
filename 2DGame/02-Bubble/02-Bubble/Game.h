@@ -5,6 +5,10 @@
 #include "Scene.h"
 #include "Menu.h"
 
+#include"Framework.h"
+
+#define	TEST_WAVE_FILE		"Footsteps.wav"
+
 
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 480
@@ -30,6 +34,7 @@ public:
 	void init();
 	bool update(int deltaTime);
 	void render();
+	void cleanup();
 	
 	enum State {MENU, GAME};
 
@@ -47,6 +52,10 @@ public:
 	bool getSpecialKey(int key) const;
 
 private:
+	ALuint      uiBuffer;
+	ALuint      uiSource;
+	ALint       iState;
+
 	bool bPlay;                       // Continue to play game?
 	Menu menu;                        // Main menu to render
 	Scene scene;                      // Scene to render

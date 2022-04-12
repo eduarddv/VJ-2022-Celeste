@@ -5,6 +5,26 @@
 
 void Game::init()
 {
+	// OpenAL setup
+	// Generate an AL Buffer
+	alGenBuffers(1, &uiBuffer);
+
+	// Load Wave file into OpenAL Buffer
+	if (!ALFWLoadWaveToBuffer((char*)ALFWaddMediaPath(TEST_WAVE_FILE), uiBuffer))
+	{
+		ALFWprintf("Failed to load %s\n", ALFWaddMediaPath(TEST_WAVE_FILE));
+	}
+
+	// Generate a Source to playback the Buffer
+	alGenSources(1, &uiSource);
+
+	// Attach Source to Buffer
+	alSourcei(uiSource, AL_BUFFER, uiBuffer);
+
+	// Initialize iState
+	alGetSourcei(uiSource, AL_SOURCE_STATE, &iState);
+
+
 	bPlay = true;
 	state = MENU;
 	bS = false; bLastFrameWasUpdate = true;
@@ -44,6 +64,13 @@ bool Game::update(int deltaTime)
 		}
 	} break;
 	}
+
+	// OpenAL: background music
+	alGetSourcei(uiSource, AL_SOURCE_STATE, &iState);
+	if (iState != AL_PLAYING) {
+		alSourcePlay(uiSource);
+	}
+
 	return bPlay;
 }
 
@@ -59,6 +86,14 @@ void Game::render()
 		scene.render();
 	} break;
 	}
+}
+
+void Game::cleanup()
+{
+	// OpennAL: clean up by deleting Source(s) and Buffer(s)
+	alSourceStop(uiSource);
+	alDeleteSources(1, &uiSource);
+	alDeleteBuffers(1, &uiBuffer);
 }
 
 void Game::keyPressed(int key)
