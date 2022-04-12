@@ -22,11 +22,14 @@ public:
 
 	void spawn();
 
+	enum Orientation { LEFT, RIGHT };
+
 private:
 	void setPosition(const glm::vec2& pos);
 
 private:
-	bool bJumping, bDashing, bCanDash;
+	Orientation orientation;
+	bool bJumping, bDashing, bCanDash, bClimbing;
 	bool bG; // Cheats: (G)od mode
 	bool bD; // Cheats: Infinite (D)ash
 	glm::ivec2 tileMapDispl, posPlayer;

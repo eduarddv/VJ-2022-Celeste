@@ -36,7 +36,7 @@ public:
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int *posY);
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY, const bool &bG);
 	bool collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const;
-	bool touchingWall(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const bool& bCheckRightFirst, bool* bTouchingRightFirst) const;
 
 	bool levelWin();
 	bool levelLose();
