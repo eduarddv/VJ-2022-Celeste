@@ -133,10 +133,6 @@ void Player::update(int deltaTime)
 				bDashing = false;
 			}
 		}
-		if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-		{
-			spawn();
-		}
 		// CLIMB
 		if (Game::instance().getKey('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
 		{
@@ -158,10 +154,6 @@ void Player::update(int deltaTime)
 			{
 				sprite->changeAnimation(STAND_LEFT);
 			}
-			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-			{
-				spawn();
-			}
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
@@ -171,10 +163,6 @@ void Player::update(int deltaTime)
 			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
 			{
 				sprite->changeAnimation(STAND_RIGHT);
-			}
-			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-			{
-				spawn();
 			}
 		}
 		else
@@ -200,10 +188,6 @@ void Player::update(int deltaTime)
 			}
 			else if (jumpAngle > 90)
 				bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG);
-			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-			{
-				spawn();
-			}
 
 			// CLIMB
 			if (Game::instance().getKey('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE))
@@ -236,11 +220,12 @@ void Player::update(int deltaTime)
 					startY = posPlayer.y;
 				}
 			}
-			if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
-			{
-				spawn();
-			}
 		}
+	}
+
+	if (map->collisionSpike(posPlayer, PLAYER_QUAD_SIZE, bG))
+	{
+		spawn();
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
