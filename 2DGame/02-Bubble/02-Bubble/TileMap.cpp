@@ -291,10 +291,10 @@ bool TileMap::touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const 
 	bool bTouchingWallLeft = false, bTouchingWallRight = false;
 	for (int y = y0; y <= y1; y++)
 	{
-		if (x0 > 0 && map[y * mapSize.x + x0 - 1] != 0 && (pos.x % tileSize < 4)) {
+		if (x0 > 0 && ((map[y * mapSize.x + x0 - 1] > 0 && map[y * mapSize.x + x0 - 1] <= 17) || (map[y * mapSize.x + x0 - 1] > 22 && map[y * mapSize.x + x0 - 1] <= 25)) && (pos.x % tileSize < 4)) {
 			bTouchingWallLeft = true;
 		}
-		if ((x1 + 1 < mapSize.x) && map[y * mapSize.x + x1 + 1] != 0 && ((pos.x + size.x - 1) % tileSize) >= tileSize - 4)
+		if ((x1 + 1 < mapSize.x) && ((map[y * mapSize.x + x1 + 1] > 0 && map[y * mapSize.x + x1 + 1] <= 17) || (map[y * mapSize.x + x1 + 1] > 22 && map[y * mapSize.x + x1 + 1] <= 25)) && ((pos.x + size.x - 1) % tileSize) >= tileSize - 4)
 		{
 			bTouchingWallRight = true;
 		}
