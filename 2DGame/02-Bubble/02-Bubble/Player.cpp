@@ -90,7 +90,7 @@ void Player::update(int deltaTime)
 		}
 		
 		if (dashDir.x) {
-			orientation = (dashDir.x == 1) ? RIGHT : LEFT;
+			orientation = (dashDir.x > 0) ? RIGHT : LEFT;
 		}
 		bJumping = false; bDashing = true; bCanDash = false; bClimbing = false;
 		dashLength = 0;
@@ -107,23 +107,24 @@ void Player::update(int deltaTime)
 			bDashing = false;
 		}
 
+		bool bCollisionHorizontal = false, bCollisionUp = false;
 		glm::vec2 posPlayerDash = (posPlayerEnd * float(dashLength) + posPlayerStart * float(DASH_LENGTH_MAX - dashLength)) / float(DASH_LENGTH_MAX);
 		posPlayer.x = int(posPlayerDash.x);
 		if (dashDir.x < 0) {
-			if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x)) 
+			if (bCollisionHorizontal |= map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x)) 
 			{
 				bDashing = false;
 			}
 		}
 		else if (dashDir.x > 0) {
-			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
+			if (bCollisionHorizontal |= map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
 			{
 				bDashing = false;
 			}
 		}
 		posPlayer.y = int(posPlayerDash.y);
 		if (dashDir.y < 0) {
-			if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
+			if (bCollisionUp = map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
 			{
 				bDashing = false;
 			}
@@ -133,6 +134,17 @@ void Player::update(int deltaTime)
 			{
 				bDashing = false;
 			}
+		}
+		// JUMP
+		if (bCollisionUp || bCollisionHorizontal && !dashDir.y) {
+			bJumping = true;
+			jumpAngle = 90;
+			startY = posPlayer.y + JUMP_HEIGHT;
+		}
+		else if (bCollisionHorizontal) {
+			bJumping = true;
+			jumpAngle = (dashDir.y > 0) ? 180 : 0;
+			startY = posPlayer.y;
 		}
 		// CLIMB
 		bool bTouchingRightFirst = false;
@@ -196,19 +208,24 @@ void Player::update(int deltaTime)
 
 		if (bJumping)
 		{
-			jumpAngle += JUMP_ANGLE_STEP;			
-			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+			jumpAngle += JUMP_ANGLE_STEP;
 			if (jumpAngle <= 90) {
-				if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y))
-					jumpAngle = 180 - jumpAngle;
+				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+				if (map->collisionMoveUp(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y)) {
+					jumpAngle = 90;
+					startY = posPlayer.y + JUMP_HEIGHT;
+				}
 			}
-			else if (jumpAngle > 90) {
+			else if (jumpAngle > 90 && jumpAngle <= 180) {
+				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 				bClimbing = false;
 				bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG);
 			}
-			if (jumpAngle >= 180)
+			else if (jumpAngle > 180)
 			{
-				bJumping = false;
+				jumpAngle -= JUMP_ANGLE_STEP; // So that we don't overflow
+				posPlayer.y += FALL_STEP;
+				bJumping = !map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG);
 			}
 
 			// CLIMB
@@ -227,6 +244,7 @@ void Player::update(int deltaTime)
 			if (map->collisionMoveDown(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.y, bG))
 			{
 				bCanDash = true;
+				// JUMP
 				if (Game::instance().getKeyBuffer('c'))
 				{
 					bJumping = true;
@@ -236,15 +254,11 @@ void Player::update(int deltaTime)
 			}
 			else
 			{
-				// CLIMB
-				bool bTouchingRightFirst = false;
-				if (Game::instance().getKeyBuffer('c') && map->touchingWall(posPlayer, PLAYER_QUAD_SIZE, orientation == RIGHT, &bTouchingRightFirst))
-				{
-					orientation = bTouchingRightFirst ? LEFT : RIGHT;
-					bJumping = true; bClimbing = true;
-					jumpAngle = 0;
-					startY = posPlayer.y;
-				}
+				// FALL
+				posPlayer.y -= FALL_STEP;
+				bJumping = true;
+				jumpAngle = 90;
+				startY = posPlayer.y + JUMP_HEIGHT;
 			}
 		}
 	}
