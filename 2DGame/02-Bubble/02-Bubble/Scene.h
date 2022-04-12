@@ -37,7 +37,6 @@ private:
 	int level;
 	TileMap* map;
 	Player* player;
-	list<Bouncer*> bouncers;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

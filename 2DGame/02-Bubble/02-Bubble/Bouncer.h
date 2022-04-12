@@ -3,7 +3,6 @@
 
 
 #include "Sprite.h"
-#include "TileMap.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -14,13 +13,15 @@ class Bouncer
 {
 
 public:
+
+
 	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
 
-	void setTileMap(TileMap* tileMap);
 
-	void spawn();
+	void spawn(int x, int y);
+	void setState(bool state);
 
 
 private:
@@ -32,7 +33,6 @@ private:
 	int startY;
 	Texture spritesheet;
 	Sprite* sprite;
-	TileMap* map;
 
 };
 

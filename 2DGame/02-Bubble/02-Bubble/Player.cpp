@@ -299,6 +299,12 @@ void Player::update(int deltaTime)
 		spawn();
 	}
 
+	if (map->collisionBouncer(posPlayer, PLAYER_QUAD_SIZE, bG)) {
+		bJumping = true;
+		jumpAngle = 0;
+		startY = posPlayer.y;
+	}
+
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 

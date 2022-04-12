@@ -25,10 +25,10 @@ void Bouncer::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationSpeed(IDLE, 8);
-	sprite->addKeyframe(IDLE, glm::vec2(0.5, 0.33));
+	sprite->addKeyframe(IDLE, glm::vec2(0.5f, 0.33f));
 
 	sprite->setAnimationSpeed(COMPRESSED, 8);
-	sprite->addKeyframe(COMPRESSED, glm::vec2(0.625, 0.33));
+	sprite->addKeyframe(COMPRESSED, glm::vec2(0.625f, 0.33f));
 
 	sprite->changeAnimation(IDLE);
 	tileMapDispl = tileMapPos;
@@ -38,17 +38,14 @@ void Bouncer::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 void Bouncer::update(int deltaTime)
 {
-	if (Game::instance().getScene().getPlayer().getPosition().x == posBouncer.x && Game::instance().getScene().getPlayer().getPosition().y == posBouncer.y && deltaTime%10==0) {
-		if (bCompressed == false) {
-			bCompressed = true;
-			sprite->changeAnimation(COMPRESSED);
-		}
-		else {
-			bCompressed = false;
-			sprite->changeAnimation(IDLE);
-			Game::instance().getScene().getPlayer().setJumpstate(true);
-		}
+	if (bCompressed == true) {
+		sprite->changeAnimation(COMPRESSED);
 	}
+	else {
+		bCompressed = false;
+		sprite->changeAnimation(IDLE);
+	}
+	
 	
 }
 
@@ -57,16 +54,16 @@ void Bouncer::render()
 	sprite->render();
 }
 
-void Bouncer::setTileMap(TileMap* tileMap)
-{
-	map = tileMap;
-}
-
-void Bouncer::spawn()
+void Bouncer::spawn(int x, int y)
 {
 	bCompressed = false;
-	setPosition(glm::vec2(map->getPlayerInitTile().x * map->getTileSize(), map->getPlayerInitTile().y * map->getTileSize()));
+	setPosition(glm::vec2(x * 24, y * 24));
 	sprite->changeAnimation(IDLE);
+}
+
+void Bouncer::setState(bool state)
+{
+	bCompressed = state;
 }
 
 void Bouncer::setPosition(const glm::vec2& pos)
@@ -74,3 +71,5 @@ void Bouncer::setPosition(const glm::vec2& pos)
 	posBouncer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posBouncer.x), float(tileMapDispl.y + posBouncer.y)));
 }
+
+

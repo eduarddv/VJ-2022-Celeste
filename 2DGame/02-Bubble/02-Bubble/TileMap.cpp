@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
+#include <list>
 #include "TileMap.h"
+#include "Bouncer.h"
 
 
 using namespace std;
@@ -19,7 +20,7 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
 	bLevelWin = false; bLevelLose = false;
-	loadLevel(levelFile);
+	loadLevel(levelFile, minCoords, program);
 	prepareArrays(minCoords, program);
 }
 
@@ -30,8 +31,27 @@ TileMap::~TileMap()
 }
 
 
+void TileMap::update(int deltaTime)
+{
+	currentTime += deltaTime;
+
+	list<Bouncer*> copy = BOU;
+
+	while (copy.empty() == false) {
+		copy.front()->update(deltaTime);
+		copy.pop_front();
+	}
+}
+
 void TileMap::render() const
 {
+	list<Bouncer*> copy = BOU;
+
+	while (copy.empty() == false) {
+		copy.front()->render();
+		copy.pop_front();
+	}
+
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
 	glBindVertexArray(vao);
@@ -46,7 +66,7 @@ void TileMap::free()
 	glDeleteBuffers(1, &vbo);
 }
 
-bool TileMap::loadLevel(const string &levelFile)
+bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, ShaderProgram& program)
 {
 	ifstream fin;
 	string line, tilesheetFile;
@@ -82,6 +102,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
 	map = new int[mapSize.x * mapSize.y];
+	bouncermap = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -89,6 +110,10 @@ bool TileMap::loadLevel(const string &levelFile)
 			fin.get(tile);
 			if(tile == ' ')
 				map[j*mapSize.x+i] = 0;
+			else if (tile == 'E') {
+				map[j * mapSize.x + i] = 0;
+				bouncermap[j * mapSize.x + i] = 1;
+			}
 			else
 				map[j*mapSize.x+i] = tile - int('0');
 		}
@@ -104,7 +129,7 @@ bool TileMap::loadLevel(const string &levelFile)
 
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	int tile, nTiles = 0;
+	int tile, btile, nTiles = 0;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
 	vector<float> vertices;
 	
@@ -113,6 +138,15 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	{
 		for(int i=0; i<mapSize.x; i++)
 		{
+			btile = bouncermap[j * mapSize.x + i];
+			if (btile != 0) {
+				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+				Bouncer* l = new Bouncer();
+				l->init(glm::ivec2(minCoords.x, minCoords.y), program);
+				l->spawn(i, j);
+				BOU.push_back(l);
+			}
+			
 			tile = map[j * mapSize.x + i];
 			if(tile != 0)
 			{
@@ -271,6 +305,28 @@ bool TileMap::collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, cons
 		for (int y = y0; y <= y1; y++)
 		{
 			if (map[y * mapSize.x + x] + int('0') >= int('R') && map[y * mapSize.x + x] + int('0') < int('R') + 4)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool TileMap::collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const
+{
+	int x0, x1, y0, y1;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y0 = pos.y / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		for (int y = y0; y <= y1; y++)
+		{
+			if (bouncermap[y * mapSize.x + x] + int('0') == 1)
 			{
 				return true;
 			}
