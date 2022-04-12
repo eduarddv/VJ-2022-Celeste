@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include "Saltador.h"
 
 
 using namespace std;
@@ -89,6 +90,12 @@ bool TileMap::loadLevel(const string &levelFile)
 			fin.get(tile);
 			if(tile == ' ')
 				map[j*mapSize.x+i] = 0;
+			else if (tile == 'E') {
+				map[j * mapSize.x + 1] = 0;
+				Saltador s = new Saltador();
+				s.init();
+				s.spawn(i, j * mapSize.x);
+			}
 			else
 				map[j*mapSize.x+i] = tile - int('0');
 		}

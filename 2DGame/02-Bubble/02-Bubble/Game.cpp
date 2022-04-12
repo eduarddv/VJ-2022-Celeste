@@ -61,6 +61,11 @@ void Game::render()
 	}
 }
 
+Scene Game::getScene()
+{
+	return Scene();
+}
+
 void Game::keyPressed(int key)
 {
 	if(key == 27) // Escape code

@@ -31,6 +31,8 @@ public:
 	bool update(int deltaTime);
 	void render();
 	
+	Scene getScene();
+
 	enum State {MENU, GAME};
 
 	// Input callback methods

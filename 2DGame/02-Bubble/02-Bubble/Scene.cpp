@@ -36,6 +36,8 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setTileMap(map);
 	player->spawn();
+	entities = new Entity();
+	entities->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -86,6 +88,11 @@ void Scene::render()
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
 	player->render();
+}
+
+Player Scene::getPlayer()
+{
+	return Player();
 }
 
 void Scene::initShaders()

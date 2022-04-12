@@ -22,6 +22,8 @@ public:
 
 	void spawn();
 
+	glm::ivec2 getPosition();
+
 private:
 	void setPosition(const glm::vec2& pos);
 

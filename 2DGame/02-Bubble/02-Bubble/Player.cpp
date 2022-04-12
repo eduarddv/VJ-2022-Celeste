@@ -271,6 +271,11 @@ void Player::spawn()
 	sprite->changeAnimation(STAND_RIGHT);
 }
 
+glm::ivec2 Player::getPosition()
+{
+	return posPlayer;
+}
+
 void Player::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
