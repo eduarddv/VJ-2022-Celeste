@@ -46,6 +46,8 @@ public:
 	bool getKeyBuffer(int key);
 	bool getSpecialKey(int key) const;
 
+	Scene getScene();
+
 private:
 	bool bPlay;                       // Continue to play game?
 	Menu menu;                        // Main menu to render

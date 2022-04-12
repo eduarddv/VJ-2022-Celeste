@@ -24,6 +24,10 @@ public:
 
 	enum Orientation { LEFT, RIGHT };
 
+	glm::ivec2& getPosition();
+
+	void setJumpstate(bool resultat);
+
 private:
 	void setPosition(const glm::vec2& pos);
 

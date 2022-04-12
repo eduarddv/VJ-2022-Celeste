@@ -320,6 +320,16 @@ void Player::setTileMap(TileMap* tileMap)
 	map = tileMap;
 }
 
+glm::ivec2& Player::getPosition()
+{
+	return posPlayer;
+}
+
+void Player::setJumpstate(bool resultat)
+{
+	bJumping = resultat;
+}
+
 void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
