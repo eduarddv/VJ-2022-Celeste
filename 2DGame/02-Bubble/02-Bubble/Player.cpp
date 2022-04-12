@@ -18,7 +18,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_RIGHT, JUMP_LEFT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_LEFT, JUMP_RIGHT
 };
 
 
@@ -59,7 +59,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.25, 0.75f));
 		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.5, 0.75f));
 		
-	sprite->changeAnimation(0);
+	sprite->changeAnimation(STAND_RIGHT);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	
@@ -166,7 +166,16 @@ void Player::update(int deltaTime)
 			jumpAngle = 0;
 			startY = posPlayer.y;
 		}
-	} 
+
+		if (orientation == LEFT) {
+			if (sprite->animation() != JUMP_LEFT)
+				sprite->changeAnimation(JUMP_LEFT);
+		}
+		else if (orientation == RIGHT) {
+			if (sprite->animation() != JUMP_RIGHT)
+				sprite->changeAnimation(JUMP_RIGHT);
+		}
+	}
 	else
 	{
 		if (bClimbing) {
@@ -187,31 +196,37 @@ void Player::update(int deltaTime)
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 		{
-			if (sprite->animation() != MOVE_LEFT)
-				sprite->changeAnimation(MOVE_LEFT);
 			posPlayer.x -= MOVE_STEP;
 			if (map->collisionMoveLeft(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
 			{
-				sprite->changeAnimation(STAND_LEFT);
+				if (!bJumping && sprite->animation() != STAND_LEFT)
+					sprite->changeAnimation(STAND_LEFT);
+			}
+			else {
+				if (!bJumping && sprite->animation() != MOVE_LEFT)
+					sprite->changeAnimation(MOVE_LEFT);
 			}
 			orientation = LEFT;
 		}
 		else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 		{
-			if (sprite->animation() != MOVE_RIGHT)
-				sprite->changeAnimation(MOVE_RIGHT);
 			posPlayer.x += MOVE_STEP;
 			if (map->collisionMoveRight(posPlayer, PLAYER_QUAD_SIZE, &posPlayer.x))
 			{
-				sprite->changeAnimation(STAND_RIGHT);
+				if (!bJumping && sprite->animation() != STAND_RIGHT)
+					sprite->changeAnimation(STAND_RIGHT);
+			}
+			else {
+				if (!bJumping && sprite->animation() != MOVE_RIGHT)
+					sprite->changeAnimation(MOVE_RIGHT);
 			}
 			orientation = RIGHT;
 		}
 		else
 		{
-			if (sprite->animation() == MOVE_LEFT)
+			if (!bJumping && orientation == LEFT && sprite->animation() != STAND_LEFT)
 				sprite->changeAnimation(STAND_LEFT);
-			else if (sprite->animation() == MOVE_RIGHT)
+			else if (!bJumping && orientation == RIGHT && sprite->animation() != STAND_RIGHT)
 				sprite->changeAnimation(STAND_RIGHT);
 		}
 
@@ -245,6 +260,15 @@ void Player::update(int deltaTime)
 				bJumping = true; bClimbing = true;
 				jumpAngle = 0;
 				startY = posPlayer.y;
+			}
+
+			if (orientation == LEFT) {
+				if (sprite->animation() != JUMP_LEFT)
+					sprite->changeAnimation(JUMP_LEFT);
+			}
+			else if (orientation == RIGHT) {
+				if (sprite->animation() != JUMP_RIGHT)
+					sprite->changeAnimation(JUMP_RIGHT);
 			}
 		}
 		else
