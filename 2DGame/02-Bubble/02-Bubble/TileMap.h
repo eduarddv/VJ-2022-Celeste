@@ -4,6 +4,7 @@
 
 #include "Texture.h"
 #include "Bouncer.h"
+#include "Flag.h"
 #include "ShaderProgram.h"
 #include <glm/glm.hpp>
 #include <list>
@@ -41,7 +42,8 @@ public:
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int* posY);
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY, const bool& bG);
 	bool collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const;
-	bool collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const;
+	bool collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionFlag(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const bool& bCheckRightFirst, bool* bTouchingRightFirst) const;
 
 	bool levelWin();
@@ -55,6 +57,7 @@ private:
 	GLuint vao;
 	GLuint vbo;
 	list<Bouncer*> BOU;
+	list<Flag*> FLA;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 playerInitTile, mapSize, tilesheetSize;
 	int tileSize, blockSize;
@@ -63,6 +66,7 @@ private:
 	glm::vec2 tileTexSize;
 	int* map;
 	int* bouncermap;
+	int* flagmap;
 	float currentTime;
 };
 

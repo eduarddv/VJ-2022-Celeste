@@ -98,6 +98,11 @@ void Game::mouseRelease(int button)
 {
 }
 
+void Game::win()
+{	
+	state = MENU;
+}
+
 bool Game::getKey(int key) const
 {
 	return keys[key];

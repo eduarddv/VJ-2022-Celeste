@@ -45,13 +45,6 @@ void TileMap::update(int deltaTime)
 
 void TileMap::render() const
 {
-	list<Bouncer*> copy = BOU;
-
-	while (copy.empty() == false) {
-		copy.front()->render();
-		copy.pop_front();
-	}
-
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
 	glBindVertexArray(vao);
@@ -59,6 +52,13 @@ void TileMap::render() const
 	glEnableVertexAttribArray(texCoordLocation);
 	glDrawArrays(GL_TRIANGLES, 0, 6 * mapSize.x * mapSize.y);
 	glDisable(GL_TEXTURE_2D);
+
+	list<Bouncer*> copy = BOU;
+
+	while (copy.empty() == false) {
+		copy.front()->render();
+		copy.pop_front();
+	}
 }
 
 void TileMap::free()
@@ -103,6 +103,7 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 	
 	map = new int[mapSize.x * mapSize.y];
 	bouncermap = new int[mapSize.x * mapSize.y];
+	flagmap = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -113,6 +114,10 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 			else if (tile == 'E') {
 				map[j * mapSize.x + i] = 0;
 				bouncermap[j * mapSize.x + i] = 1;
+			}
+			else if (tile == '^') {
+				map[j * mapSize.x + i] = 0;
+				flagmap[j * mapSize.x + i] = 1;
 			}
 			else
 				map[j*mapSize.x+i] = tile - int('0');
@@ -129,7 +134,7 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 
 void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 {
-	int tile, btile, nTiles = 0;
+	int tile, btile, ftile, nTiles = 0;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
 	vector<float> vertices;
 	
@@ -139,12 +144,21 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 		for(int i=0; i<mapSize.x; i++)
 		{
 			btile = bouncermap[j * mapSize.x + i];
-			if (btile != 0) {
+			if (btile == 1) {
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
 				Bouncer* l = new Bouncer();
 				l->init(glm::ivec2(minCoords.x, minCoords.y), program);
 				l->spawn(i, j);
 				BOU.push_back(l);
+			}
+
+			ftile = flagmap[j * mapSize.x + i];
+			if (ftile == 1) {
+				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+				Flag* l = new Flag();
+				l->init(glm::ivec2(minCoords.x, minCoords.y), program);
+				l->spawn(i, j);
+				FLA.push_back(l);
 			}
 			
 			tile = map[j * mapSize.x + i];
@@ -314,7 +328,7 @@ bool TileMap::collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, cons
 	return false;
 }
 
-bool TileMap::collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const
+bool TileMap::collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size) const
 {
 	int x0, x1, y0, y1;
 
@@ -326,7 +340,29 @@ bool TileMap::collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size, co
 	{
 		for (int y = y0; y <= y1; y++)
 		{
-			if (bouncermap[y * mapSize.x + x] + int('0') == 1)
+			if (bouncermap[y * mapSize.x + x] == 1)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool TileMap::collisionFlag(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	int x0, x1, y0, y1;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y0 = pos.y / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
+	for (int x = x0; x <= x1; x++)
+	{
+		for (int y = y0; y <= y1; y++)
+		{
+			if (flagmap[y * mapSize.x + x] == 1)
 			{
 				return true;
 			}

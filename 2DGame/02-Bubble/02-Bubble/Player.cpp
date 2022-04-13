@@ -299,10 +299,17 @@ void Player::update(int deltaTime)
 		spawn();
 	}
 
-	if (map->collisionBouncer(posPlayer, PLAYER_QUAD_SIZE, bG)) {
+	if (map->collisionBouncer(posPlayer, PLAYER_QUAD_SIZE)) {
 		bJumping = true;
+		bDashing = false;
+		bCanDash = true;
 		jumpAngle = 0;
-		startY = posPlayer.y;
+		startY = posPlayer.y - 24;
+
+	}
+
+	if (map->collisionFlag(posPlayer, PLAYER_QUAD_SIZE)) {
+		Game::instance().win();
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
@@ -317,6 +324,7 @@ void Player::spawn()
 {
 	bJumping = false; bDashing = false; bCanDash = true; bClimbing = false;
 	orientation = RIGHT;
+	cerr << map->getPlayerInitTile().x << ' ' << map->getPlayerInitTile().y << ' ' << map->getTileSize() << endl;
 	setPosition(glm::vec2(map->getPlayerInitTile().x * map->getTileSize(), map->getPlayerInitTile().y * map->getTileSize()));
 	sprite->changeAnimation(STAND_RIGHT);
 }

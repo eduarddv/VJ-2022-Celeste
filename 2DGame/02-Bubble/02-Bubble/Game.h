@@ -41,6 +41,8 @@ public:
 	void mouseMove(int x, int y);
 	void mousePress(int button);
 	void mouseRelease(int button);
+
+	void win();
 	
 	bool getKey(int key) const;
 	bool getKeyBuffer(int key);
