@@ -318,11 +318,14 @@ void Player::update(int deltaTime)
 		bJumpingBouncer = true;
 		jumpAngle = 0;
 		startY = posPlayer.y;
-
 	}
 
 	if (map->collisionFlag(posPlayer, PLAYER_QUAD_SIZE)) {
 		Game::instance().win();
+	}
+
+	if (map->collisionBalloon(posPlayer, PLAYER_QUAD_SIZE)) {
+		bCanDash = true;
 	}
 
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));

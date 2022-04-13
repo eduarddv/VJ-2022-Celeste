@@ -3,7 +3,6 @@
 #include <sstream>
 #include <list>
 #include "TileMap.h"
-#include "Bouncer.h"
 
 
 using namespace std;
@@ -42,6 +41,10 @@ void TileMap::update(int deltaTime)
 	for (auto it = FLA.begin(); it != FLA.end(); it++) {
 		(*it)->update(deltaTime);
 	}
+
+	for (auto it = BAL.begin(); it != BAL.end(); it++) {
+		(*it)->update(deltaTime);
+	}
 }
 
 void TileMap::render() const
@@ -59,6 +62,10 @@ void TileMap::render() const
 	}
 
 	for (auto it = FLA.begin(); it != FLA.end(); it++) {
+		(*it)->render();
+	}
+
+	for (auto it = BAL.begin(); it != BAL.end(); it++) {
 		(*it)->render();
 	}
 }
@@ -111,17 +118,26 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 			fin.get(tile);
 			if(tile == ' ')
 				map[j*mapSize.x+i] = 0;
-			else if (tile == 'E') {
+			else if (tile == 'E') { // Bouncers
 				map[j * mapSize.x + i] = 0;
 				Bouncer* l = new Bouncer();
 				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), tilesheet, program);
 				BOU.push_back(l);
 			}
-			else if (tile == '^') {
+			else if (tile == '^') { // Flags
 				map[j * mapSize.x + i] = 0;
 				Flag* l = new Flag();
 				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), tilesheet, program);
 				FLA.push_back(l);
+			}
+			else if (tile == 'N') { // Balloons (head)
+				map[j * mapSize.x + i] = 0;
+				Balloon* l = new Balloon();
+				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), tilesheet, program);
+				BAL.push_back(l);
+			}
+			else if (tile == 'O' || tile == 'P') { // Balloons (handle)
+				map[j * mapSize.x + i] = 0;
 			}
 			else
 				map[j*mapSize.x+i] = tile - int('0');
@@ -370,6 +386,34 @@ bool TileMap::collisionFlag(const glm::ivec2& pos, const glm::ivec2& size) const
 	return collision;
 }
 
+bool TileMap::collisionBalloon(const glm::ivec2& pos, const glm::ivec2& size) const
+{
+	int x0, x1, y0, y1;
+
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y0 = pos.y / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
+	bool collision = false;
+	for (auto it = BAL.begin(); it != BAL.end(); it++) {
+		glm::ivec2 pos = (*it)->getPosition();
+		int xe = pos.x / tileSize, ye = pos.y / tileSize;
+		for (int x = x0; x <= x1; x++)
+		{
+			for (int y = y0; y <= y1; y++)
+			{
+				if (x == xe && y == ye && !(*it)->isPopped())
+				{
+					(*it)->pop();
+					collision = true;
+				}
+			}
+		}
+	}
+
+	return collision;
+}
+
 bool TileMap::touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const bool &bCheckRightFirst, bool *bTouchingRightFirst) const
 {
 	int x0, x1, y0, y1;
@@ -406,33 +450,4 @@ bool TileMap::levelLose()
 	bLevelLose = false;
 	return tmp;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

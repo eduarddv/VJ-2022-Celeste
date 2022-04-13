@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "Bouncer.h"
 #include "Flag.h"
+#include "Balloon.h"
 #include "ShaderProgram.h"
 #include <glm/glm.hpp>
 #include <list>
@@ -44,6 +45,7 @@ public:
 	bool collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const;
 	bool collisionBouncer(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool collisionFlag(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionBalloon(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const bool& bCheckRightFirst, bool* bTouchingRightFirst) const;
 
 	bool levelWin();
@@ -58,6 +60,7 @@ private:
 	GLuint vbo;
 	list<Bouncer*> BOU;
 	list<Flag*> FLA;
+	list<Balloon*> BAL;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 playerInitTile, mapSize, tilesheetSize;
 	int tileSize, blockSize;
