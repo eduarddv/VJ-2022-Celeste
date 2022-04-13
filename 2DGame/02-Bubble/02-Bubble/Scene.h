@@ -3,11 +3,9 @@
 
 
 #include <glm/glm.hpp>
-#include <list>
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
-#include "Bouncer.h"
 
 
 // Scene contains all the entities of our game.
@@ -24,10 +22,6 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
-
-	Player getPlayer();
-
-	list<Bouncer*> searchBouncers(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 
 private:
 	void initShaders();

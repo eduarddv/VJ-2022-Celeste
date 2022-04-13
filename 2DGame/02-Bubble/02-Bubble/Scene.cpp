@@ -98,11 +98,6 @@ void Scene::render()
 	player->render();
 }
 
-Player Scene::getPlayer()
-{
-	return Player();
-}
-
 void Scene::initShaders()
 {
 	Shader vShader, fShader;

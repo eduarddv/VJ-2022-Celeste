@@ -26,14 +26,13 @@ public:
 
 	glm::ivec2& getPosition();
 
-	void setJumpstate(bool resultat);
-
 private:
 	void setPosition(const glm::vec2& pos);
 
 private:
 	Orientation orientation;
 	bool bJumping, bDashing, bCanDash, bClimbing;
+	bool bJumpingBouncer;
 	bool bG; // Cheats: (G)od mode
 	bool bD; // Cheats: Infinite (D)ash
 	glm::ivec2 tileMapDispl, posPlayer;
