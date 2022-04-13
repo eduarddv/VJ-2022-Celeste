@@ -4,6 +4,8 @@
 
 #include "Scene.h"
 #include "Menu.h"
+#include "Info.h"
+#include "Credits.h"
 
 #include"Framework.h"
 
@@ -36,7 +38,7 @@ public:
 	void render();
 	void cleanup();
 	
-	enum State {MENU, GAME};
+	enum State {MENU, INFO, GAME, CREDITS};
 
 	// Input callback methods
 	void keyPressed(int key);
@@ -46,10 +48,14 @@ public:
 	void mouseMove(int x, int y);
 	void mousePress(int button);
 	void mouseRelease(int button);
+
+	void win();
 	
 	bool getKey(int key) const;
 	bool getKeyBuffer(int key);
 	bool getSpecialKey(int key) const;
+
+	Scene getScene();
 
 private:
 	ALuint      uiBuffer;
@@ -58,7 +64,9 @@ private:
 
 	bool bPlay;                       // Continue to play game?
 	Menu menu;                        // Main menu to render
+	Info info;                        // Info screed to render
 	Scene scene;                      // Scene to render
+	Credits credits;                  // Credits screen to render
 	bool keys[256], keysBuffer[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	State state;

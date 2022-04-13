@@ -31,7 +31,10 @@ void Game::init()
 	lastFrameDeltaTime = 0;
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	menu.init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	info.init(SCREEN_WIDTH, SCREEN_HEIGHT);
 	scene.init();
+	credits.init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	keysBuffer['1'] = true;
 }
 
 bool Game::update(int deltaTime)
@@ -46,8 +49,16 @@ bool Game::update(int deltaTime)
 	switch (state)
 	{
 	case MENU: {
+		if (getKeyBuffer('i')) {
+			state = INFO;
+			break;
+		}
+		else if (getKeyBuffer(' ')) {
+			state = GAME;
 
-	} break;
+		}
+		else break;
+	}
 	case GAME: {
 		if (bS) { // Cheats: Half (S)peed
 			if (bLastFrameWasUpdate) {
@@ -62,6 +73,15 @@ bool Game::update(int deltaTime)
 		else {
 			scene.update(deltaTime);
 		}
+	} break;
+
+	case INFO: {
+		if (getKeyBuffer('m')) {
+			state = MENU;
+		}
+	} break;
+
+	case CREDITS: {
 	} break;
 	}
 
@@ -82,8 +102,14 @@ void Game::render()
 	case MENU: {
 		menu.render();
 	} break;
+	case INFO: {
+		info.render();
+	} break;
 	case GAME: {
 		scene.render();
+	} break;
+	case CREDITS: {
+		credits.render();
 	} break;
 	}
 }
@@ -100,8 +126,6 @@ void Game::keyPressed(int key)
 {
 	if(key == 27) // Escape code
 		bPlay = false;
-	if (key == ' ')
-		state = GAME;
 	keys[key] = true;
 	keysBuffer[key] = true;
 }
@@ -133,6 +157,11 @@ void Game::mouseRelease(int button)
 {
 }
 
+void Game::win()
+{	
+	state = CREDITS;
+}
+
 bool Game::getKey(int key) const
 {
 	return keys[key];
@@ -148,6 +177,11 @@ bool Game::getKeyBuffer(int key)
 bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
+}
+
+Scene Game::getScene()
+{
+	return Scene();
 }
 
 

@@ -1,8 +1,12 @@
 #include <iostream>
 #include <cmath>
+#include <fstream>
+#include <sstream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "Bouncer.h"
+
 
 
 #define SCREEN_X 16
@@ -36,6 +40,7 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setTileMap(map);
 	player->spawn();
+	
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -44,6 +49,7 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	map->update(deltaTime);
 
 	if (map->levelLose()) {
 		player->spawn();
@@ -121,6 +127,5 @@ void Scene::initShaders()
 	vShader.free();
 	fShader.free();
 }
-
 
 
