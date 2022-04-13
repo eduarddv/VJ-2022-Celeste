@@ -6,6 +6,7 @@
 #include "Bouncer.h"
 #include "Flag.h"
 #include "Balloon.h"
+#include "DestructibleBlock.h"
 #include "ShaderProgram.h"
 #include <glm/glm.hpp>
 #include <list>
@@ -61,6 +62,7 @@ private:
 	list<Bouncer*> BOU;
 	list<Flag*> FLA;
 	list<Balloon*> BAL;
+	list<DestructibleBlock*> DES;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 playerInitTile, mapSize, tilesheetSize;
 	int tileSize, blockSize;

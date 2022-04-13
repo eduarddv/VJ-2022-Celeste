@@ -45,6 +45,10 @@ void TileMap::update(int deltaTime)
 	for (auto it = BAL.begin(); it != BAL.end(); it++) {
 		(*it)->update(deltaTime);
 	}
+
+	for (auto it = DES.begin(); it != DES.end(); it++) {
+		(*it)->update(deltaTime);
+	}
 }
 
 void TileMap::render() const
@@ -66,6 +70,10 @@ void TileMap::render() const
 	}
 
 	for (auto it = BAL.begin(); it != BAL.end(); it++) {
+		(*it)->render();
+	}
+
+	for (auto it = DES.begin(); it != DES.end(); it++) {
 		(*it)->render();
 	}
 }
@@ -137,6 +145,15 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 				BAL.push_back(l);
 			}
 			else if (tile == 'O' || tile == 'P') { // Balloons (handle)
+				map[j * mapSize.x + i] = 0;
+			}
+			else if (tile == 'G') { // DestructibleBlock (IDLE)
+				map[j * mapSize.x + i] = 0;
+				DestructibleBlock* l = new DestructibleBlock();
+				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), tilesheet, program);
+				DES.push_back(l);
+			}
+			else if (tile == 'H' || tile == 'I	') { // DestructibleBlock (DESTROYING1) and DestructibleBlock (DESTROYING2)
 				map[j * mapSize.x + i] = 0;
 			}
 			else
@@ -213,18 +230,33 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, i
 		*posX = 0;
 		return true;
 	}
+	bool collision = false;
 	for (int y = y0; y <= y1; y++)
 	{
-		if ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25)) {
+		if (!collision && ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25))) {
 			if (*posX - tileSize * (x + 1) > -11)
 			{
-				*posX = tileSize * (x + 1);
-				return true;
+				collision = true;
+			}
+		}
+
+		// DestructibleBlock collision
+		for (auto it = DES.begin(); it != DES.end(); it++) {
+			glm::ivec2 pos = (*it)->getPosition();
+			int xe = pos.x / tileSize, ye = pos.y / tileSize;
+			if (x == xe && y == ye && !(*it)->isDestroyed())
+			{
+				// (*it)->destroy();
+				collision = true;
 			}
 		}
 	}
-	
-	return false;
+
+	if (collision) {
+		*posX = tileSize * (x + 1);
+	}
+
+	return collision;
 }
 
 bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, int *posX)
@@ -238,18 +270,33 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, 
 		*posX = mapSize.x * tileSize - size.x;
 		return true;
 	}
+	bool collision = false;
 	for(int y=y0; y<=y1; y++)
 	{
-		if ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25)) {
+		if (!collision && ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25))) {
 			if (*posX - tileSize * x + size.x <= 10)
 			{
-				*posX = tileSize * x - size.x;
-				return true;
+				collision = true;
+			}
+		}
+
+		// DestructibleBlock collision
+		for (auto it = DES.begin(); it != DES.end(); it++) {
+			glm::ivec2 pos = (*it)->getPosition();
+			int xe = pos.x / tileSize, ye = pos.y / tileSize;
+			if (x == xe && y == ye && !(*it)->isDestroyed())
+			{
+				// (*it)->destroy();
+				collision = true;
 			}
 		}
 	}
 	
-	return false;
+	if (collision) {
+		*posX = tileSize * x - size.x;
+	}
+
+	return collision;
 }
 
 bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int *posY)
@@ -264,18 +311,33 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 		bLevelWin = true;
 		return true;
 	}
+	bool collision = false;
 	for (int x = x0; x <= x1; x++)
 	{
-		if ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25)) {
+		if (!collision && ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25))) {
 			if (*posY - tileSize * (y+1) > -11)
 			{
-				*posY = tileSize * (y+1);
-				return true;
+				collision = true;
+			}
+		}
+
+		// DestructibleBlock collision
+		for (auto it = DES.begin(); it != DES.end(); it++) {
+			glm::ivec2 pos = (*it)->getPosition();
+			int xe = pos.x / tileSize, ye = pos.y / tileSize;
+			if (x == xe && y == ye && !(*it)->isDestroyed())
+			{
+				// (*it)->destroy();
+				collision = true;
 			}
 		}
 	}
 
-	return false;
+	if (collision) {
+		*posY = tileSize * (y + 1);
+	}
+
+	return collision;
 }
 
 bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int* posY, const bool &bG)
@@ -290,19 +352,34 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 		bLevelLose = !bG;
 		return true;
 	}
+	bool collision = false;
 	for (int x = x0; x <= x1; x++)
 	{
-		if ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25) 
-			|| (map[y * mapSize.x + x] > 40 && map[y * mapSize.x + x] <= 42)) { // Clouds are solid when falling
+		if (!collision && ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25) 
+			|| (map[y * mapSize.x + x] > 40 && map[y * mapSize.x + x] <= 42))) { // Clouds are solid when falling
 			if (*posY - tileSize * y + size.y <= 10)
 			{
-				*posY = tileSize * y - size.y;
-				return true;
+				collision = true;
+			}
+		}
+
+		// DestructibleBlock collision
+		for (auto it = DES.begin(); it != DES.end(); it++) {
+			glm::ivec2 pos = (*it)->getPosition();
+			int xe = pos.x / tileSize, ye = pos.y / tileSize;
+			if (x == xe && y == ye && !(*it)->isDestroyed())
+			{
+				(*it)->destroy();
+				collision = true;
 			}
 		}
 	}
 
-	return false;
+	if (collision) {
+		*posY = tileSize * y - size.y;
+	}
+
+	return collision;
 }
 
 bool TileMap::collisionSpike(const glm::ivec2& pos, const glm::ivec2& size, const bool& bG) const
