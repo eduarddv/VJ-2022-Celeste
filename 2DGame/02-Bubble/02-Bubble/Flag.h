@@ -5,8 +5,8 @@
 #include "Sprite.h"
 
 
-// Player is basically a Sprite that represents the player. As such it has
-// all properties it needs to track its movement, jumping, and collisions.
+// Flag is basically a Sprite that represents the flag. As such it has
+// all properties it needs to track its collisions.
 
 
 class Flag
@@ -15,22 +15,15 @@ class Flag
 public:
 
 
-	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
+	void init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, Texture& tilesheet, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
 
+	glm::ivec2 getPosition();
 
-	void spawn(int x, int y);
-
-
-private:
-	void setPosition(const glm::vec2& pos);
 
 private:
-	int state;
 	glm::ivec2 tileMapDispl, posFlag;
-	int startY;
-	Texture spritesheet;
 	Sprite* sprite;
 
 };

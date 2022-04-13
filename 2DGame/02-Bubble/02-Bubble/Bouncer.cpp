@@ -39,6 +39,8 @@ void Bouncer::init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, Texture&
 
 void Bouncer::update(int deltaTime)
 {
+	sprite->update(deltaTime);
+
 	if (bCompressed == true) {
 		if (framesCompressed++ >= FRAMES_COMPRESSED) {
 			bCompressed = false;

@@ -39,11 +39,8 @@ void TileMap::update(int deltaTime)
 		(*it)->update(deltaTime);
 	}
 
-	list<Flag*> copyf = FLA;
-
-	while (copyf.empty() == false) {
-		copyf.front()->update(deltaTime);
-		copyf.pop_front();
+	for (auto it = FLA.begin(); it != FLA.end(); it++) {
+		(*it)->update(deltaTime);
 	}
 }
 
@@ -61,11 +58,8 @@ void TileMap::render() const
 		(*it)->render();
 	}
 
-	list<Flag*> copyf = FLA;
-
-	while (copyf.empty() == false) {
-		copyf.front()->render();
-		copyf.pop_front();
+	for (auto it = FLA.begin(); it != FLA.end(); it++) {
+		(*it)->render();
 	}
 }
 
@@ -110,7 +104,6 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
 	map = new int[mapSize.x * mapSize.y];
-	flagmap = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
 		for(int i=0; i<mapSize.x; i++)
@@ -126,7 +119,9 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 			}
 			else if (tile == '^') {
 				map[j * mapSize.x + i] = 0;
-				flagmap[j * mapSize.x + i] = 1;
+				Flag* l = new Flag();
+				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), tilesheet, program);
+				FLA.push_back(l);
 			}
 			else
 				map[j*mapSize.x+i] = tile - int('0');
@@ -152,15 +147,6 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	{
 		for(int i=0; i<mapSize.x; i++)
 		{
-			ftile = flagmap[j * mapSize.x + i];
-			if (ftile == 1) {
-				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				Flag* l = new Flag();
-				l->init(glm::ivec2(minCoords.x, minCoords.y), program);
-				l->spawn(i, j);
-				FLA.push_back(l);
-			}
-			
 			tile = map[j * mapSize.x + i];
 			if(tile != 0)
 			{
@@ -364,18 +350,23 @@ bool TileMap::collisionFlag(const glm::ivec2& pos, const glm::ivec2& size) const
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
-	for (int x = x0; x <= x1; x++)
-	{
-		for (int y = y0; y <= y1; y++)
+	bool collision = false;
+	for (auto it = FLA.begin(); it != FLA.end(); it++) {
+		glm::ivec2 pos = (*it)->getPosition();
+		int xe = pos.x / tileSize, ye = pos.y / tileSize;
+		for (int x = x0; x <= x1; x++)
 		{
-			if (flagmap[y * mapSize.x + x] == 1)
+			for (int y = y0; y <= y1; y++)
 			{
-				return true;
+				if (x == xe && y == ye)
+				{
+					collision = true;
+				}
 			}
 		}
 	}
 
-	return false;
+	return collision;
 }
 
 bool TileMap::touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const bool &bCheckRightFirst, bool *bTouchingRightFirst) const

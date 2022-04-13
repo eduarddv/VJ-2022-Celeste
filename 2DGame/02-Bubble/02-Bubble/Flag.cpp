@@ -11,48 +11,30 @@
 #define FLAG_QUAD_SIZE glm::ivec2(24, 24)
 
 
-enum BouncerAnims
+enum FlagAnims
 {
-	IDLE, FIRST, SECOND
+	IDLE
 };
 
-void Flag::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
+void Flag::init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, Texture& tilesheet, ShaderProgram& shaderProgram)
 {
-	spritesheet.loadFromFile("images/MapaD.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spritesheet.setMinFilter(GL_NEAREST);
-	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(FLAG_QUAD_SIZE, glm::vec2(0.16f, 0.16f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(FLAG_QUAD_SIZE, glm::vec2(0.125f, 1.f / 6.f), &tilesheet, &shaderProgram);
 	sprite->setNumberAnimations(3);
 
 	sprite->setAnimationSpeed(IDLE, 8);
-	sprite->addKeyframe(IDLE, glm::vec2(0.625f, 0.875f));
-
-	sprite->setAnimationSpeed(FIRST, 8);
-	sprite->addKeyframe(FIRST, glm::vec2(0.75f, 0.875f));
-
-	sprite->setAnimationSpeed(SECOND, 8);
-	sprite->addKeyframe(SECOND, glm::vec2(0.875f, 0.875f));
+	sprite->addKeyframe(IDLE, glm::vec2(0.625f, 5.f / 6.f));
+	sprite->addKeyframe(IDLE, glm::vec2(0.75f, 5.f / 6.f));
+	sprite->addKeyframe(IDLE, glm::vec2(0.875f, 5.f / 6.f));
 
 	sprite->changeAnimation(IDLE);
 	tileMapDispl = tileMapPos;
+	posFlag = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posFlag.x), float(tileMapDispl.y + posFlag.y)));
 }
 
 void Flag::update(int deltaTime)
 {
-	if (state == 0) {
-		sprite->changeAnimation(FIRST);
-		state++;
-	}
-	else if (state == 1) {
-		sprite->changeAnimation(SECOND);
-		state++;
-	}
-	else {
-		sprite->changeAnimation(IDLE);
-		state = 0;
-	}
-
+	sprite->update(deltaTime);
 }
 
 void Flag::render()
@@ -60,14 +42,7 @@ void Flag::render()
 	sprite->render();
 }
 
-void Flag::spawn(int x, int y)
+glm::ivec2 Flag::getPosition()
 {
-	setPosition(glm::vec2(x * 24, y * 24));
-	sprite->changeAnimation(IDLE);
-}
-
-void Flag::setPosition(const glm::vec2& pos)
-{
-	posFlag = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posFlag.x), float(tileMapDispl.y + posFlag.y)));
+	return posFlag;
 }
