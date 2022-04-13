@@ -35,11 +35,8 @@ void TileMap::update(int deltaTime)
 {
 	currentTime += deltaTime;
 
-	list<Bouncer*> copy = BOU;
-
-	while (copy.empty() == false) {
-		copy.front()->update(deltaTime);
-		copy.pop_front();
+	for (auto it = BOU.begin(); it != BOU.end(); it++) {
+		(*it)->update(deltaTime);
 	}
 
 	list<Flag*> copyf = FLA;
@@ -60,11 +57,8 @@ void TileMap::render() const
 	glDrawArrays(GL_TRIANGLES, 0, 6 * mapSize.x * mapSize.y);
 	glDisable(GL_TEXTURE_2D);
 
-	list<Bouncer*> copy = BOU;
-
-	while (copy.empty() == false) {
-		copy.front()->render();
-		copy.pop_front();
+	for (auto it = BOU.begin(); it != BOU.end(); it++) {
+		(*it)->render();
 	}
 
 	list<Flag*> copyf = FLA;
