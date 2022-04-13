@@ -121,7 +121,7 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 			else if (tile == 'E') {
 				map[j * mapSize.x + i] = 0;
 				Bouncer* l = new Bouncer();
-				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), program);
+				l->init(glm::ivec2(minCoords.x, minCoords.y), glm::ivec2(i * tileSize, j * tileSize), tilesheet, program);
 				BOU.push_back(l);
 			}
 			else if (tile == '^') {

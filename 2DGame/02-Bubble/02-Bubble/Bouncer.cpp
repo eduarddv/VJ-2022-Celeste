@@ -17,14 +17,11 @@ enum BouncerAnims
 	IDLE, COMPRESSED
 };
 
-void Bouncer::init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, ShaderProgram& shaderProgram)
+void Bouncer::init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, Texture& tilesheet, ShaderProgram& shaderProgram)
 {
 	bCompressed = false;
 	framesCompressed = 0;
-	spritesheet.loadFromFile("images/MapaD.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	spritesheet.setMinFilter(GL_NEAREST);
-	spritesheet.setMagFilter(GL_NEAREST);
-	sprite = Sprite::createSprite(BOUNCER_QUAD_SIZE, glm::vec2(0.125f, 1.f / 6.f), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(BOUNCER_QUAD_SIZE, glm::vec2(0.125f, 1.f / 6.f), &tilesheet, &shaderProgram);
 	sprite->setNumberAnimations(2);
 
 	sprite->setAnimationSpeed(IDLE, 8);

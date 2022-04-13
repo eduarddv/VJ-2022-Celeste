@@ -15,7 +15,7 @@ class Bouncer
 public:
 
 
-	void init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, ShaderProgram& shaderProgram);
+	void init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, Texture& tilesheet, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
 
@@ -29,7 +29,6 @@ private:
 	bool bCompressed;
 	int framesCompressed;
 	glm::ivec2 tileMapDispl, posBouncer;
-	Texture spritesheet;
 	Sprite* sprite;
 
 };
