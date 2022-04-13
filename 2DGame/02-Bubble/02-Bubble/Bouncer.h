@@ -5,8 +5,8 @@
 #include "Sprite.h"
 
 
-// Player is basically a Sprite that represents the player. As such it has
-// all properties it needs to track its movement, jumping, and collisions.
+// Bouncer is basically a Sprite that represents the bouncer. As such it has
+// all properties it needs to track its collisions.
 
 
 class Bouncer
@@ -15,22 +15,20 @@ class Bouncer
 public:
 
 
-	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
+	void init(const glm::ivec2& tileMapPos, const glm::ivec2& pos, ShaderProgram& shaderProgram);
 	void update(int deltaTime);
 	void render();
 
+	glm::ivec2 getPosition();
+	bool isCompressed();
 
-	void spawn(int x, int y);
-	void setState(bool state);
+	void compress();
 
-
-private:
-	void setPosition(const glm::vec2& pos);
 
 private:
 	bool bCompressed;
+	int framesCompressed;
 	glm::ivec2 tileMapDispl, posBouncer;
-	int startY;
 	Texture spritesheet;
 	Sprite* sprite;
 
