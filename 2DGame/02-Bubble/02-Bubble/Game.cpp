@@ -10,9 +10,9 @@ void Game::init()
 	alGenBuffers(1, &uiBuffer);
 
 	// Load Wave file into OpenAL Buffer
-	if (!ALFWLoadWaveToBuffer((char*)ALFWaddMediaPath(TEST_WAVE_FILE), uiBuffer))
+	if (!ALFWLoadWaveToBuffer((char*)ALFWaddMediaPath(BACKGROUND_MUSIC_FILE), uiBuffer))
 	{
-		ALFWprintf("Failed to load %s\n", ALFWaddMediaPath(TEST_WAVE_FILE));
+		ALFWprintf("Failed to load %s\n", ALFWaddMediaPath(BACKGROUND_MUSIC_FILE));
 	}
 
 	// Generate a Source to playback the Buffer

@@ -9,7 +9,8 @@
 
 #include"Framework.h"
 
-#define	TEST_WAVE_FILE		"Footsteps.wav"
+#define	TEST_WAVE_FILE		  "Footsteps.wav"
+#define	BACKGROUND_MUSIC_FILE "CelesteMusic.wav"
 
 
 #define SCREEN_WIDTH 480
