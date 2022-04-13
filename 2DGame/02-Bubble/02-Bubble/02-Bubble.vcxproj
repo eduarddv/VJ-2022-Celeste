@@ -14,9 +14,11 @@
     <ClInclude Include="AnimKeyframes.h" />
     <ClInclude Include="Balloon.h" />
     <ClInclude Include="Bouncer.h" />
+    <ClInclude Include="Credits.h" />
     <ClInclude Include="DestructibleBlock.h" />
     <ClInclude Include="Flag.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Info.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
@@ -29,9 +31,11 @@
   <ItemGroup>
     <ClCompile Include="Balloon.cpp" />
     <ClCompile Include="Bouncer.cpp" />
+    <ClCompile Include="Credits.cpp" />
     <ClCompile Include="DestructibleBlock.cpp" />
     <ClCompile Include="Flag.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Info.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
