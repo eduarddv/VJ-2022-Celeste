@@ -16,7 +16,7 @@ images/MapaD.png        -- Tilesheet
       94   GG   
       94        
       ;8      GG
-                
+[               
 1113        GG  
 5554    GG      
 5564GG          

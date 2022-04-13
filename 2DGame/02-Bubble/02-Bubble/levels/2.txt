@@ -9,8 +9,8 @@ images/MapaD.png        -- Tilesheet
 5537      94   9
 654       98   9
 564       ?    9
-5:8    R  A    9
-4      @      25
+5:8    R  A   [9
+4 ]    @      25
 5377   ?      96
 5513   A      ;:
 5564   7      21
@@ -18,5 +18,5 @@ images/MapaD.png        -- Tilesheet
 ::54   ?       9
   ;4   ?       ;
    A   ?RRR     
-       9113     
+      \9113     
 11111115564     

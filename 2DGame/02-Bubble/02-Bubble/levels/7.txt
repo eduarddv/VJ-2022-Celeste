@@ -18,5 +18,5 @@ images/MapaD.png        -- Tilesheet
     YZ    YZ    
                 
     YZ    YZ    
-                
+   ]            
  213            

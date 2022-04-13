@@ -17,6 +17,6 @@ images/MapaD.png        -- Tilesheet
                 
                 
             E   
-            G   
-      GGG       
+C           G   
+D     GGG       
 1113            

@@ -6,7 +6,7 @@ images/MapaD.png        -- Tilesheet
 8 6                     -- Number of tiles in tilesheet
 :8   9:::8;:::55
               ;6
-               9
+   [           9
    =><         9
           RR   ;
           23    
@@ -15,8 +15,8 @@ images/MapaD.png        -- Tilesheet
       7   ;53   
       @    ;8   
       A         
-      7         
->>><  7        J
+  \   7         
+>>><  7    ]   J
   7   7    <>>>>
   7   @K    7   
   7   ?     7   

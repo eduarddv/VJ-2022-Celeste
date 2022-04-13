@@ -8,7 +8,7 @@ images/MapaD.png        -- Tilesheet
 565554       965
 55537        ;55
 5:554         ;5
-8 ;58          ;
+8 ;58]\        ;
    A213         
  M  954RRRR    C
     ;::>>><    D
@@ -17,6 +17,6 @@ images/MapaD.png        -- Tilesheet
               95
        RRRR   96
        =11<   95
-        94    95
+  \     94    95
 113  E  94   E95
 564  @  94   255

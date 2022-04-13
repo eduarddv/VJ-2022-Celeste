@@ -156,6 +156,9 @@ bool TileMap::loadLevel(const string &levelFile, const glm::vec2& minCoords, Sha
 			else if (tile == 'H' || tile == 'I	') { // DestructibleBlock (DESTROYING1) and DestructibleBlock (DESTROYING2)
 				map[j * mapSize.x + i] = 0;
 			}
+			else if (tile == 'J' || tile == 'K' || tile == 'L' || tile == 'M' || tile == 'B') { // NOT DONE ELEMENTS
+				map[j * mapSize.x + i] = 0;
+			}
 			else
 				map[j*mapSize.x+i] = tile - int('0');
 		}

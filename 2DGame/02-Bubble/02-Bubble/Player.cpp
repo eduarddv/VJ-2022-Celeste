@@ -18,7 +18,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_LEFT, JUMP_RIGHT
+	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, JUMP_LEFT, JUMP_RIGHT, LOOK_UP_LEFT, LOOK_UP_RIGHT, LOOK_DOWN_LEFT, LOOK_DOWN_RIGHT
 };
 
 
@@ -32,14 +32,26 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	spritesheet.setMinFilter(GL_NEAREST);
 	spritesheet.setMagFilter(GL_NEAREST);
 	sprite = Sprite::createSprite(PLAYER_QUAD_SIZE, glm::vec2(0.25, 0.25), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
+	sprite->setNumberAnimations(10);
 	
 		sprite->setAnimationSpeed(STAND_LEFT, 8);
 		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.25f));
 		
 		sprite->setAnimationSpeed(STAND_RIGHT, 8);
 		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
-		
+
+		sprite->setAnimationSpeed(LOOK_UP_LEFT, 8);
+		sprite->addKeyframe(LOOK_UP_LEFT, glm::vec2(0.25f, 0.75f));
+
+		sprite->setAnimationSpeed(LOOK_UP_RIGHT, 8);
+		sprite->addKeyframe(LOOK_UP_RIGHT, glm::vec2(0.25f, 0.5f));
+
+		sprite->setAnimationSpeed(LOOK_DOWN_LEFT, 8);
+		sprite->addKeyframe(LOOK_DOWN_LEFT, glm::vec2(0.f, 0.75f));
+
+		sprite->setAnimationSpeed(LOOK_DOWN_RIGHT, 8);
+		sprite->addKeyframe(LOOK_DOWN_RIGHT, glm::vec2(0.f, 0.5f));
+
 		sprite->setAnimationSpeed(MOVE_LEFT, 8);
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f, 0.25f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.25f, 0.25f));
@@ -228,10 +240,28 @@ void Player::update(int deltaTime)
 		}
 		else
 		{
-			if (!bJumping && orientation == LEFT && sprite->animation() != STAND_LEFT)
-				sprite->changeAnimation(STAND_LEFT);
-			else if (!bJumping && orientation == RIGHT && sprite->animation() != STAND_RIGHT)
-				sprite->changeAnimation(STAND_RIGHT);
+			if (!bJumping) {
+				if (Game::instance().getSpecialKey(GLUT_KEY_UP)) {
+					if (orientation == LEFT && sprite->animation() != LOOK_UP_LEFT)
+						sprite->changeAnimation(LOOK_UP_LEFT);
+					else if (orientation == RIGHT && sprite->animation() != LOOK_UP_RIGHT)
+						sprite->changeAnimation(LOOK_UP_RIGHT);
+				}
+				else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)) {
+					if (orientation == LEFT && sprite->animation() != LOOK_DOWN_LEFT)
+						sprite->changeAnimation(LOOK_DOWN_LEFT);
+					else if (orientation == RIGHT && sprite->animation() != LOOK_DOWN_RIGHT)
+						sprite->changeAnimation(LOOK_DOWN_RIGHT);
+				}
+				else {
+					if (orientation == LEFT && sprite->animation() != STAND_LEFT)
+						sprite->changeAnimation(STAND_LEFT);
+					else if (orientation == RIGHT && sprite->animation() != STAND_RIGHT)
+						sprite->changeAnimation(STAND_RIGHT);
+				}
+			}
+			
+
 		}
 
 		if (bJumping)
