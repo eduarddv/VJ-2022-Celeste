@@ -41,6 +41,13 @@ void TileMap::update(int deltaTime)
 		copy.front()->update(deltaTime);
 		copy.pop_front();
 	}
+
+	list<Flag*> copyf = FLA;
+
+	while (copyf.empty() == false) {
+		copyf.front()->update(deltaTime);
+		copyf.pop_front();
+	}
 }
 
 void TileMap::render() const
@@ -58,6 +65,13 @@ void TileMap::render() const
 	while (copy.empty() == false) {
 		copy.front()->render();
 		copy.pop_front();
+	}
+
+	list<Flag*> copyf = FLA;
+
+	while (copyf.empty() == false) {
+		copyf.front()->render();
+		copyf.pop_front();
 	}
 }
 
