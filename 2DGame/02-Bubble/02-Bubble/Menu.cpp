@@ -20,7 +20,7 @@ void Menu::init(int screenWidth, int screenHeight)
 	this->screenHeight = screenHeight;
 	initShaders();
 	prepareArrays(glm::vec2(0, 0), texProgram);
-	menuTexture.loadFromFile("images/varied.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	menuTexture.loadFromFile("images/Menu.png", TEXTURE_PIXEL_FORMAT_RGB);
 	menuTexture.setMinFilter(GL_NEAREST);
 	menuTexture.setMagFilter(GL_NEAREST);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
