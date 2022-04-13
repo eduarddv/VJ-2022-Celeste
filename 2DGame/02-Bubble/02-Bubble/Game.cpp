@@ -14,6 +14,7 @@ void Game::init()
 	info.init(SCREEN_WIDTH, SCREEN_HEIGHT);
 	scene.init();
 	credits.init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	keysBuffer['1'] = true;
 }
 
 bool Game::update(int deltaTime)
@@ -30,16 +31,14 @@ bool Game::update(int deltaTime)
 	case MENU: {
 		if (getKeyBuffer('i')) {
 			state = INFO;
+			break;
 		}
 		else if (getKeyBuffer(' ')) {
 			state = GAME;
+
 		}
-	} break;
-	case INFO: {
-		if (getKeyBuffer('m')) {
-			state = MENU;
-		}
-	} break;
+		else break;
+	}
 	case GAME: {
 		if (bS) { // Cheats: Half (S)peed
 			if (bLastFrameWasUpdate) {
@@ -55,6 +54,13 @@ bool Game::update(int deltaTime)
 			scene.update(deltaTime);
 		}
 	} break;
+
+	case INFO: {
+		if (getKeyBuffer('m')) {
+			state = MENU;
+		}
+	} break;
+
 	case CREDITS: {
 	} break;
 	}
