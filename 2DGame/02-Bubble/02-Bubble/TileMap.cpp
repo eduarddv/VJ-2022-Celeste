@@ -246,7 +246,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, i
 			int xe = pos.x / tileSize, ye = pos.y / tileSize;
 			if (x == xe && y == ye && !(*it)->isDestroyed())
 			{
-				// (*it)->destroy();
+				(*it)->destroy();
 				collision = true;
 			}
 		}
@@ -286,7 +286,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, 
 			int xe = pos.x / tileSize, ye = pos.y / tileSize;
 			if (x == xe && y == ye && !(*it)->isDestroyed())
 			{
-				// (*it)->destroy();
+				(*it)->destroy();
 				collision = true;
 			}
 		}
@@ -327,7 +327,6 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 			int xe = pos.x / tileSize, ye = pos.y / tileSize;
 			if (x == xe && y == ye && !(*it)->isDestroyed())
 			{
-				// (*it)->destroy();
 				collision = true;
 			}
 		}
@@ -505,9 +504,30 @@ bool TileMap::touchingWall(const glm::ivec2& pos, const glm::ivec2& size, const 
 		if (x0 > 0 && ((map[y * mapSize.x + x0 - 1] > 0 && map[y * mapSize.x + x0 - 1] <= 17) || (map[y * mapSize.x + x0 - 1] > 22 && map[y * mapSize.x + x0 - 1] <= 25)) && (pos.x % tileSize < 4)) {
 			bTouchingWallLeft = true;
 		}
+
+		// DestructibleBlock collision
+		for (auto it = DES.begin(); it != DES.end(); it++) {
+			glm::ivec2 pos = (*it)->getPosition();
+			int xe = pos.x / tileSize, ye = pos.y / tileSize;
+			if ((x0 - 1) == xe && y == ye && !(*it)->isDestroyed())
+			{
+				bTouchingWallLeft = true;
+			}
+		}
+
 		if ((x1 + 1 < mapSize.x) && ((map[y * mapSize.x + x1 + 1] > 0 && map[y * mapSize.x + x1 + 1] <= 17) || (map[y * mapSize.x + x1 + 1] > 22 && map[y * mapSize.x + x1 + 1] <= 25)) && ((pos.x + size.x - 1) % tileSize) >= tileSize - 4)
 		{
 			bTouchingWallRight = true;
+		}
+
+		// DestructibleBlock collision
+		for (auto it = DES.begin(); it != DES.end(); it++) {
+			glm::ivec2 pos = (*it)->getPosition();
+			int xe = pos.x / tileSize, ye = pos.y / tileSize;
+			if ((x1 + 1) == xe && y == ye && !(*it)->isDestroyed())
+			{
+				bTouchingWallRight = true;
+			}
 		}
 	}
 
