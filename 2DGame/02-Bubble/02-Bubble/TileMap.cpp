@@ -276,7 +276,8 @@ bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, i
 	}
 	for (int x = x0; x <= x1; x++)
 	{
-		if ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25)) {
+		if ((map[y * mapSize.x + x] > 0 && map[y * mapSize.x + x] <= 17) || (map[y * mapSize.x + x] > 22 && map[y * mapSize.x + x] <= 25) 
+			|| (map[y * mapSize.x + x] > 40 && map[y * mapSize.x + x] <= 42)) { // Clouds are solid when falling
 			if (*posY - tileSize * y + size.y <= 10)
 			{
 				*posY = tileSize * y - size.y;
