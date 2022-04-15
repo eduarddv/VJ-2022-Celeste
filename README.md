@@ -13,3 +13,7 @@ COMPILATION INSTRUCTIONS
 EXECUTION INSTRUCTIONS
 
 Precompiled binaries are not available. Follow the compilation instructions instead and run the compiled binary to play the game.
+
+VIDEO DEMO
+
+https://user-images.githubusercontent.com/26429343/163588941-3d48856e-0d2a-4eee-b8e6-ad24510d9d74.mp4
